@@ -6,12 +6,14 @@ public class Substance {
 
     private String sub_name;
     private String add_text;
-    private int value;
+    private double value;
+    private int image;
 
-    public Substance(String sub_name, String add_text, int value) {
+    public Substance(String sub_name, String add_text, double value, int image) {
         this.sub_name = sub_name;
         this.add_text = add_text;
         this.value = value;
+        this.image = image;
     }
 
     public Substance() {
@@ -33,8 +35,16 @@ public class Substance {
         this.add_text = add_text;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 
     public void setValue(int value) {
@@ -42,9 +52,11 @@ public class Substance {
     }
     public static ArrayList<Substance> createContactsList(int numContacts) {
         ArrayList<Substance> contacts = new ArrayList<Substance>();
-        String[] subs = {"Creatinine", "BNU", "Potassium", "Calcium"};
+        String[] subs = {"creatinine", "bnu", "potassium", "calcium"};
+        int[] bLogos = {R.drawable.creatinine, R.drawable.bnu, R.drawable.potassium, R.drawable.calcium};
         for (int i = 0; i < numContacts; i++) {
-            contacts.add(new Substance(subs[i%4], subs[i%4], 50));
+            double rand = Math.random()*100;
+            contacts.add(new Substance(subs[i%4], subs[i%4], rand, bLogos[i%4]));
         }
 
         return contacts;
