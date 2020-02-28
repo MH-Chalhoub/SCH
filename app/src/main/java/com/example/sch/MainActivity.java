@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat formatter;
     Calendar c;
 
+    int lastPosition = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +90,38 @@ public class MainActivity extends AppCompatActivity {
         c = Calendar.getInstance();
         c.setTime(date);
 
+        lastPosition = mViewPager.getCurrentItem();
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+                if (lastPosition > i) {
+                    System.out.println("Left");
+                    c.add(Calendar.DATE, -1);
+                    date = c.getTime();
+                    String strDate= formatter.format(date);
+                    day.setText(strDate);
+                }else if (lastPosition < i) {
+                    System.out.println("Right");
+                    c.add(Calendar.DATE, 1);
+                    date = c.getTime();
+                    String strDate= formatter.format(date);
+                    day.setText(strDate);
+                }
+                lastPosition = i;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 
         ImageView action_forword = (ImageView)findViewById(R.id.action_forword);
         action_forword.setOnClickListener(new View.OnClickListener() {
@@ -95,10 +129,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mViewPager.setCurrentItem(getItem(+1), true); //getItem(-1) for previous
-                c.add(Calendar.DATE, 1);
-                date = c.getTime();
-                String strDate= formatter.format(date);
-                day.setText(strDate);
 
             }
         });
@@ -109,10 +139,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mViewPager.setCurrentItem(getItem(-1), true); //getItem(-1) for previous
-                c.add(Calendar.DATE, -1);
-                date = c.getTime();
-                String strDate= formatter.format(date);
-                day.setText(strDate);
             }
         });
 
@@ -215,8 +241,11 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView1 = inflater.inflate(R.layout.activity_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            TextView day = (TextView) rootView1.findViewById(R.id.day);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            day.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
             RecyclerView rvsubs = (RecyclerView) rootView.findViewById(R.id.items_view);
             // Initialize contacts
