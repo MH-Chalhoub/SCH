@@ -52,6 +52,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
         imageViewHolder.subValue.setText(Math.ceil(itemCur.getValue()) + "");
         imageViewHolder.progress.setProgress((int)itemCur.getValue());
         imageViewHolder.itemImage.setImageResource(itemCur.getImage());
+        imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
         public ImageView itemImage;
         public TextView addText, subName, subValue;
-        public LinearLayout iconWrapperitem;
+        public LinearLayout iconWrapperitem, chartWrapperitem;
         public ProgressBar progress;
         public ImageViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -72,6 +73,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             subName = itemView.findViewById(R.id.subName);
             subValue = itemView.findViewById(R.id.subAvg);
             iconWrapperitem = itemView.findViewById(R.id.iconWrapperitem);
+            chartWrapperitem = itemView.findViewById(R.id.chartWrapperitem);
             progress = itemView.findViewById(R.id.progressBar);
 
             iconWrapperitem.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +85,11 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
                         if(postion != RecyclerView.NO_POSITION){
                             listener.onItemClick(postion);
                         }
+                    }
+                    if (chartWrapperitem.getVisibility() == View.VISIBLE) {
+                        chartWrapperitem.setVisibility(View.GONE);
+                    } else {
+                        chartWrapperitem.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -99,7 +106,6 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
                 }
             });
         }
-
     }
 }
 
