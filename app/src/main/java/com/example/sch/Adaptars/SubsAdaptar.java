@@ -67,7 +67,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
         imageViewHolder.subName.setText(itemCur.getSub_name());
         imageViewHolder.subValue.setText(Math.ceil(itemCur.getValue()) + "");
         imageViewHolder.progress.setProgress((int)itemCur.getValue());
-        imageViewHolder.itemImage.setImageResource(itemCur.getImage());
+        imageViewHolder.itemImage.setImageResource(itemCur.getLogo());
         imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
         renderData(imageViewHolder.mChart);
         imageViewHolder.mChart.setTouchEnabled(false);

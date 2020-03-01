@@ -3,11 +3,13 @@ package com.example.sch.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +75,16 @@ public class PlaceholderFragment extends Fragment {
 
             @Override
             public void onItemLongClick(int position) {
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.info_alert_dialog, null);
+                TextView alertInfo = (TextView) dialogLayout.findViewById(R.id.alertInfo);
+                ImageView alertImage = (ImageView) dialogLayout.findViewById(R.id.alertImage);
+                alertInfo.setText(subs.get(position).getSub_info());
+                alertImage.setImageResource(subs.get(position).getImage());
+                builder.setCancelable(true);
+                builder.setView(dialogLayout);
+                builder.show();
             }
         });
         // Attach the adapter to the recyclerview to populate items
