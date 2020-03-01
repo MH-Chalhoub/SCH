@@ -97,15 +97,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/chartWrapperitem"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_gravity="center"
                 android:background="@color/gray">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:id="@+id/chartDescription"
                     android:text="INVISIBLE TEXT UNDER THE CARD VIEW ..."
                     android:textAlignment="center" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
             </LinearLayout>
         </LinearLayout>
 
