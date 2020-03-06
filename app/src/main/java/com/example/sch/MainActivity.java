@@ -1,5 +1,6 @@
 package com.example.sch;
 
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,12 +26,19 @@ import android.widget.Toast;
 
 import com.example.sch.Adaptars.SectionsPagerAdapter;
 import com.example.sch.Adaptars.SubsAdaptar;
+import com.example.sch.Databases.DBHandler;
+import com.example.sch.Entities.Patient;
+import com.example.sch.Fragments.PlaceholderFragment;
 import com.example.sch.Interfaces.OnItemClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static java.lang.Integer.MAX_VALUE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,17 +57,29 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    private DBHandler dbHandler;
+
     TextView day;
     Date date;
     SimpleDateFormat formatter;
     Calendar c;
 
+    long startTime = 0;
+    Timer timer;
+    TimerTask timerTask;
+
+    //we are going to use a handler to be able to run in our TimerTask
+    final Handler handler = new Handler();
+
     int lastPosition = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        dbHandler = new DBHandler(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,10 +96,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                /*Patient p = new Patient(15, "Mohamad", "76123456", "o+", "Male");
+                long i = dbHandler.addPatient(p);
+                Patient p1 = dbHandler.getPatient((int) i);
+                Toast.makeText(MainActivity.this, p1.toString(), Toast.LENGTH_LONG).show();*/
             }
         });
 
-        mViewPager.setCurrentItem(Integer.MAX_VALUE/2);
+        mViewPager.setCurrentItem(MAX_VALUE/2);
 
         day = (TextView)findViewById(R.id.day);
 
@@ -87,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         formatter = new SimpleDateFormat("dd/MM/yyyy");
         String strDate= formatter.format(date);
 
-        day.setText(strDate);
+        day.setText("Today");
 
         c = Calendar.getInstance();
         c.setTime(date);
@@ -102,8 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int i) {
-
-                if (lastPosition > i) {
+                if(i == Integer.MAX_VALUE/2){
+                    System.out.println("Today");
+                    day.setText("Today");
+                }
+                else if (lastPosition > i) {
                     System.out.println("Left");
                     c.add(Calendar.DATE, -1);
                     date = c.getTime();
@@ -143,11 +170,15 @@ public class MainActivity extends AppCompatActivity {
                 mViewPager.setCurrentItem(getItem(-1), true); //getItem(-1) for previous
             }
         });
-
     }
 
     private int getItem(int i) {
         return mViewPager.getCurrentItem() + i;
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        System.out.println("onAttachFragment");
     }
 
     @Override
@@ -172,4 +203,26 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //timer creation,initializing and listener
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("onPause");
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("onDestroy");
+    }
 }

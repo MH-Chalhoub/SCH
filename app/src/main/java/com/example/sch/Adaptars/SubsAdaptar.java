@@ -65,11 +65,11 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
 
         imageViewHolder.addText.setText(itemCur.getAdd_text());
         imageViewHolder.subName.setText(itemCur.getSub_name());
-        imageViewHolder.subValue.setText(Math.ceil(itemCur.getValue()) + "");
+        imageViewHolder.subValue.setText(itemCur.getValue() + "");
         imageViewHolder.progress.setProgress((int)itemCur.getValue());
         imageViewHolder.itemImage.setImageResource(itemCur.getLogo());
-        imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
-        renderData(imageViewHolder.mChart);
+        //imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
+        renderData(imageViewHolder.mChart, itemCur.getValues());
         imageViewHolder.mChart.setTouchEnabled(false);
         imageViewHolder.mChart.setPinchZoom(false);
         imageViewHolder.chartDescription.setText("This is " + itemCur.getSub_name().toUpperCase() + " values during this day ");
@@ -133,21 +133,21 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
 
 
 
-    public void renderData(LineChart mChart) {
+    public void renderData(LineChart mChart, ArrayList<Double> sub_values) {
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
-        xAxis.setAxisMaximum(10f);
-        xAxis.setAxisMinimum(0f);
+        xAxis.setAxisMaximum(sub_values.size());
+        xAxis.setAxisMinimum(sub_values.size()-10);
         xAxis.setDrawLimitLinesBehindData(true);
 
-        LimitLine ll1 = new LimitLine(215f, "Maximum Limit");
+        LimitLine ll1 = new LimitLine(6f, "Maximum Limit");
         ll1.setLineWidth(4f);
         ll1.enableDashedLine(10f, 10f, 0f);
         ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         ll1.setTextSize(10f);
 
-        LimitLine ll2 = new LimitLine(70f, "Minimum Limit");
+        LimitLine ll2 = new LimitLine(3f, "Minimum Limit");
         ll2.setLineWidth(4f);
         ll2.enableDashedLine(10f, 10f, 0f);
         ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
@@ -157,28 +157,23 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
         leftAxis.removeAllLimitLines();
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(350f);
+        leftAxis.setAxisMaximum(11f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
         leftAxis.setDrawLimitLinesBehindData(false);
 
         mChart.getAxisRight().setEnabled(false);
-        setData(mChart);
+        setData(mChart, sub_values);
     }
 
-    private void setData(LineChart mChart) {
+    private void setData(LineChart mChart, ArrayList<Double> sub_values) {
 
         ArrayList<Entry> values = new ArrayList<>();
         Random rand = new Random();
-        values.add(new Entry(1, (float)rand.nextInt(250)));
-        values.add(new Entry(2, (float)rand.nextInt(250)));
-        values.add(new Entry(3, (float)rand.nextInt(250)));
-        values.add(new Entry(4, (float)rand.nextInt(250)));
-        values.add(new Entry(5, (float)rand.nextInt(250)));
-        values.add(new Entry(7, (float)rand.nextInt(250)));
-        values.add(new Entry(8, (float)rand.nextInt(250)));
-        values.add(new Entry(9, (float)rand.nextInt(250)));
+        for(int i=0; i<sub_values.size() ; i++){
+            values.add(new Entry((float)i, (float)((double)sub_values.get(i))));
+        }
 
         LineDataSet set1;
         if (mChart.getData() != null &&
@@ -187,7 +182,9 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             set1.setValues(values);
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
+            System.out.println("if (mChart.getData())");
         } else {
+            System.out.println("elsef (mChart.getData())");
             set1 = new LineDataSet(values, "Sample Data");
             set1.setDrawIcons(false);
             set1.enableDashedLine(10f, 5f, 0f);

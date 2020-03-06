@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 import com.example.sch.Fragments.PlaceholderFragment;
+import com.example.sch.Fragments.PlaceholderTodayFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,8 +31,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
         diff = position - Integer.MAX_VALUE/2;
-        Toast.makeText(context, "position = " + position + "diff = " + diff,
-                Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "position = " + position + "diff = " + diff,
+        //        Toast.LENGTH_LONG).show();
         Date dt = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(dt);
@@ -39,12 +40,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         dt = c.getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String strDate= formatter.format(dt);
-        return PlaceholderFragment.newInstance(position + 1,strDate);
+        //Toast.makeText(context, "diff = " + diff,Toast.LENGTH_LONG).show();
+        if(diff == 0)
+            return PlaceholderTodayFragment.newInstance(position + 1,strDate);
+        else
+            return PlaceholderFragment.newInstance(position + 1,strDate);
     }
 
     @Override
     public int getCount() {
-        // Show 5 total pages.
+        // Show Integer.MAX_VALUE total pages.
         return Integer.MAX_VALUE;
     }
+
 }
