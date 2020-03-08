@@ -1,6 +1,7 @@
+![GitHub Logo](/app/src/main/res/drawable/mainlogo.png)
 # SCH
 SCH abbreviation of Systeme De Controle d'Hemodialyse
-# SIC
+# SCH
 This app is a android based application for E-Health monitoring system for Hemodialyse Patient
 # Description :
 
