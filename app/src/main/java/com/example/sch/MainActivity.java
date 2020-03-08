@@ -1,8 +1,21 @@
 package com.example.sch;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,10 +44,12 @@ import com.example.sch.Entities.Patient;
 import com.example.sch.Fragments.PlaceholderFragment;
 import com.example.sch.Interfaces.OnItemClickListener;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,13 +80,30 @@ public class MainActivity extends AppCompatActivity {
     Calendar c;
 
     long startTime = 0;
-    Timer timer;
-    TimerTask timerTask;
+    Timer timer, time_to_check;
+    TimerTask timerTask, timertocheckTask;
+    double av1, av2, av3; //percentage of additional  substance
 
     //we are going to use a handler to be able to run in our TimerTask
     final Handler handler = new Handler();
 
     int lastPosition = 0;
+
+
+    float albumine, creatinine, potassium, gonflement; //random values
+    float min, max; //min and max for each substance % select from database
+    float value, av4;    //value need in random fction , av4 is average of deviation of gonflement
+    static float dialysat;   //dose of dialysat required for dialyse
+    static double time_required;    //time of dialyse required
+    int test = 0;     //test=1 if critical states
+    float dbdialysat;
+    int patientId;
+    String status;
+
+    SQLiteDatabase dbReadable;
+    SQLiteDatabase dbWritable;
+    Context context;
+    ContentValues values;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -126,22 +158,24 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if(i == Integer.MAX_VALUE/2){
-                    System.out.println("Today");
-                    day.setText("Today");
-                }
-                else if (lastPosition > i) {
+                if (lastPosition > i) {
                     System.out.println("Left");
                     c.add(Calendar.DATE, -1);
                     date = c.getTime();
                     String strDate= formatter.format(date);
-                    day.setText(strDate);
+                    if(i == Integer.MAX_VALUE/2)
+                        day.setText("Today");
+                    else
+                        day.setText(strDate);
                 }else if (lastPosition < i) {
                     System.out.println("Right");
                     c.add(Calendar.DATE, 1);
                     date = c.getTime();
                     String strDate= formatter.format(date);
-                    day.setText(strDate);
+                    if(i == Integer.MAX_VALUE/2)
+                        day.setText("Today");
+                    else
+                        day.setText(strDate);
                 }
                 lastPosition = i;
             }
@@ -170,6 +204,20 @@ public class MainActivity extends AppCompatActivity {
                 mViewPager.setCurrentItem(getItem(-1), true); //getItem(-1) for previous
             }
         });
+
+
+        context = this.getApplicationContext();
+        DBHandler helper = new DBHandler(this);
+        dbReadable = helper.getReadableDatabase();
+        dbWritable = helper.getWritableDatabase();
+        values = new ContentValues();
+        Cursor cursor = dbReadable.rawQuery("select * from PATIENT where deleted=0 ", null);
+        if (cursor.moveToFirst()) {
+            do {
+                patientId = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")));
+            } while (cursor.moveToNext());
+        }
+        startTimer();
     }
 
     private int getItem(int i) {
@@ -225,4 +273,224 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         System.out.println("onDestroy");
     }
+    public void startTimer() {
+        //set a new Timer
+
+        timer = new Timer();
+        time_to_check = new Timer();
+
+        //initialize the TimerTask's job
+        initializeTimerTask();
+
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        timer.schedule(timerTask, 0, 1000);
+
+    }
+
+    public void stoptimertask(View v) {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if (time_to_check != null) {
+            time_to_check.cancel();
+            time_to_check = null;
+        }
+    }
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+            public void run() {
+                //use a handler to run a toast that shows the current timestamp
+                handler.post(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.O)
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    public void run() {
+                        //get the current timeStamp
+                        Testing();
+
+                    }
+                });
+
+            }
+
+
+        };
+        timertocheckTask = new TimerTask() {
+            public void run() {
+                //use a handler to run a toast that shows the current timestamp
+                handler.post(new Runnable() {
+                    public void run() {
+                        //get the current timeStamp
+                        value++;
+                    }
+                });
+
+            }
+
+
+        };
+    }
+
+    //fonction to generate random concetration of albumine in patient blood
+    private float GenerateValue(Float max, Float min) {
+
+        Random rand = new Random();
+        value = (float) (min + (float) Math.round(Math.random() * (max - min))) + rand.nextFloat();
+
+        return value;
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void Testing() {
+        Cursor cursor = dbReadable.rawQuery("select * from SUBSTANCE where subst='Albumine'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                min = cursor.getFloat(cursor.getColumnIndex("dosemin")) - 2;
+                max = cursor.getFloat(cursor.getColumnIndex("dosemax")) + 10;
+                albumine = GenerateValue(max, min);
+                if (albumine > max - 10) {
+                    test = 1;
+                    //Toast.makeText(context, "albumine critical value", Toast.LENGTH_LONG).show();
+                    av1 = (albumine - (max - 10)) * 100 / (max - 2);
+                    //Toast.makeText(context, String.valueOf(av1), Toast.LENGTH_LONG).show();
+
+
+                }
+
+                //Toast.makeText(context, "albumine :" + albumine + "g/dl", Toast.LENGTH_LONG).show();
+            } while (cursor.moveToNext());
+        }
+        values.put("idpatient", patientId);
+        values.put("albumineDose", albumine);
+        cursor = dbReadable.rawQuery("select * from SUBSTANCE where subst='Creatinine'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                min = cursor.getFloat(cursor.getColumnIndex("dosemin")) - 2;
+                max = cursor.getFloat(cursor.getColumnIndex("dosemax")) + 10;
+                creatinine = GenerateValue(max, min);
+                if (creatinine > max - 10) {
+                    test = 1;
+                    av2 = (creatinine - (max - 10)) * 100 / (max - 10);
+                    //Toast.makeText(context, "creatinine critical value", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, String.valueOf(av2), Toast.LENGTH_LONG).show();
+                }
+                //Toast.makeText(context, "creatinine :" + creatinine + "mg/l", Toast.LENGTH_LONG).show();
+            } while (cursor.moveToNext());
+        }
+        values.put("creatinineDose", creatinine);
+        cursor = dbReadable.rawQuery("select * from SUBSTANCE where subst='Potassium'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                min = cursor.getFloat(cursor.getColumnIndex("dosemin")) - 2;
+                max = cursor.getFloat(cursor.getColumnIndex("dosemax")) + 10;
+                potassium = GenerateValue(max, min);
+                if (potassium > max - 10) {
+                    test = 1;
+                    av3 = (potassium - (max - 10)) * 100 / (max - 10);
+                    //Toast.makeText(context, String.valueOf(av3), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, "potassium critical value", Toast.LENGTH_LONG).show();
+                }
+                //Toast.makeText(context, "potassium :" + potassium + "mmol/l", Toast.LENGTH_LONG).show();
+            } while (cursor.moveToNext());
+        }
+        values.put("potassiumDose", potassium);
+
+        min = (float) 0.5;
+        max = 3;
+        gonflement = GenerateValue(max, min);
+        if (gonflement < 2) {
+            test = 1;
+            av4 = gonflement;
+            if (gonflement > 1) {
+                status = "inflated";
+                //Toast.makeText(context, "Kidneys are inflated", Toast.LENGTH_LONG).show();
+            } else {
+                status = "severly inflated";
+                //Toast.makeText(context, "Kidneys are severly inflated", Toast.LENGTH_LONG).show();
+            }
+        } else status = "normal";
+        values.put("gonflement", status);
+        //Toast.makeText(context, "gonflement :" + gonflement + "mm", Toast.LENGTH_LONG).show();
+        if (test == 1) {
+            dbdialysat = checkstatus(av1, av2, av3, av4);
+            values.put("dialysatDose", dbdialysat);
+
+        } else
+            values.put("dialysatDose", "Null");
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+        String date = df.format(Calendar.getInstance().getTime());
+        //System.out.println("MAIN : DATE" + date);
+        values.put("date", date);
+        long result = dbWritable.insert("STATUS", null, values);
+        //if (result < 0)
+            //Toast.makeText(context, "No Inserted Values In Status !!!!!!!", Toast.LENGTH_LONG).show();
+
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    float checkstatus(double albumine_avg, double creatinine_avg, double potassium_avg, float gonflement_avg) {
+        time_required = 0;
+        dialysat = 0;
+        if (albumine_avg < 25) {
+            dialysat += 2;
+            time_required += 2;
+        } else {
+            dialysat += 5;
+            time_required += 6;
+        }
+        if (creatinine_avg < 30) {
+            dialysat += 3;
+            time_required += 1;
+        } else {
+            dialysat += 10;
+            time_required += 4;
+        }
+
+        if (potassium_avg < 10) {
+            dialysat += 5;
+            time_required += 4;
+        } else {
+            dialysat += 15;
+            time_required += 12;
+        }
+
+
+        //notificationDialog();
+        return dialysat;
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void notificationDialog() {
+        NotificationManager notificationManager = (NotificationManager) getLayoutInflater().getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        String NOTIFICATION_CHANNEL_ID = "tutorialspoint_01";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_MAX);
+            // Configure the notification channel.
+            notificationChannel.setDescription("Sample Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID);
+        notificationBuilder.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setTicker("Tutorialspoint")
+                //.setPriority(Notification.PRIORITY_MAX)
+                .setContentTitle("Warning!!")
+                .setContentText("You have " + String.valueOf(time_required) + "h of dialyse ; require. GET WELL SOON!! " + String.valueOf(dialysat) + "d/l of dialysat")
+                .setContentInfo("Information");
+        notificationManager.notify(1, notificationBuilder.build());
+    }
+
 }

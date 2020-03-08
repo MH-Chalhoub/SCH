@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.sch.Fragments.PlaceholderFragment;
 import com.example.sch.Fragments.PlaceholderTodayFragment;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,11 +39,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         c.setTime(dt);
         c.add(Calendar.DATE, diff);
         dt = c.getTime();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy");
         String strDate= formatter.format(dt);
+
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
+        String date = df.format(Calendar.getInstance().getTime());
+        //System.out.println("SECTION PAGER : DATE" + date);
         //Toast.makeText(context, "diff = " + diff,Toast.LENGTH_LONG).show();
         if(diff == 0)
-            return PlaceholderTodayFragment.newInstance(position + 1,strDate);
+            return PlaceholderTodayFragment.newInstance(position + 1,date);
         else
             return PlaceholderFragment.newInstance(position + 1,strDate);
     }

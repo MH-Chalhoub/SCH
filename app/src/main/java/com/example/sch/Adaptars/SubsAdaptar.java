@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
     private List<Substance> mItems;
     private OnItemClickListener mListener;
 
+
     public SubsAdaptar(Context context, List<Substance> Items)
     {
         mContext = context;
@@ -63,16 +65,32 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
     public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
         Substance itemCur = mItems.get(i);
 
-        imageViewHolder.addText.setText(itemCur.getAdd_text());
-        imageViewHolder.subName.setText(itemCur.getSub_name());
-        imageViewHolder.subValue.setText(itemCur.getValue() + "");
-        imageViewHolder.progress.setProgress((int)itemCur.getValue());
-        imageViewHolder.itemImage.setImageResource(itemCur.getLogo());
-        //imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
-        renderData(imageViewHolder.mChart, itemCur.getValues());
-        imageViewHolder.mChart.setTouchEnabled(false);
-        imageViewHolder.mChart.setPinchZoom(false);
-        imageViewHolder.chartDescription.setText("This is " + itemCur.getSub_name().toUpperCase() + " values during this day ");
+        if(itemCur.getValue() != -1){
+            imageViewHolder.addText.setText(itemCur.getAdd_text());
+            imageViewHolder.subName.setText(itemCur.getSub_name());
+            imageViewHolder.subValue.setText(itemCur.getValue() + "");
+            imageViewHolder.progress.setProgress((int)itemCur.getValue());
+            imageViewHolder.itemImage.setImageResource(itemCur.getLogo());
+            //imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
+            renderData(imageViewHolder.mChart, itemCur.getValues());
+            imageViewHolder.mChart.setTouchEnabled(false);
+            imageViewHolder.mChart.setPinchZoom(false);
+            imageViewHolder.chartDescription.setText("This is " + itemCur.getSub_name().toUpperCase() + " values during this day ");
+            if(itemCur.getValue() < 3 || itemCur.getValue() > 9){
+                imageViewHolder.insideCard.setBackgroundColor(mContext.getResources().getColor(R.color.transparentRed));
+            }
+            else {
+                imageViewHolder.insideCard.setBackgroundColor(Color.WHITE);
+            }
+        }
+        else {
+            imageViewHolder.addText.setText(itemCur.getAdd_text());
+            imageViewHolder.subName.setText(itemCur.getSub_name());
+            imageViewHolder.subValue.setText("No Data");
+            imageViewHolder.progress.setProgress(0);
+            imageViewHolder.itemImage.setImageResource(itemCur.getLogo());
+            imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -84,9 +102,10 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
     public static class ImageViewHolder extends RecyclerView.ViewHolder{
         public ImageView itemImage;
         public TextView addText, subName, subValue, chartDescription;
-        public LinearLayout iconWrapperitem, chartWrapperitem;
+        public LinearLayout iconWrapperitem, chartWrapperitem, insideCard;
         public ProgressBar progress;
         private LineChart mChart;
+        private CardView cardView;
         public ImageViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.itemImage);
@@ -97,7 +116,9 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             chartWrapperitem = itemView.findViewById(R.id.chartWrapperitem);
             progress = itemView.findViewById(R.id.progressBar);
             mChart = itemView.findViewById(R.id.chart);
+            cardView = itemView.findViewById(R.id.card_view);
             chartDescription = itemView.findViewById(R.id.chartDescription);
+            insideCard = itemView.findViewById(R.id.insideCard);
 
             iconWrapperitem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,10 +130,12 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
                             listener.onItemClick(postion);
                         }
                     }
-                    if (chartWrapperitem.getVisibility() == View.VISIBLE) {
-                        chartWrapperitem.setVisibility(View.GONE);
-                    } else {
-                        chartWrapperitem.setVisibility(View.VISIBLE);
+                    if(!subValue.getText().equals("No Data")){
+                        if (chartWrapperitem.getVisibility() == View.VISIBLE) {
+                            chartWrapperitem.setVisibility(View.GONE);
+                        } else {
+                            chartWrapperitem.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             });
@@ -141,7 +164,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
         xAxis.setAxisMinimum(sub_values.size()-10);
         xAxis.setDrawLimitLinesBehindData(true);
 
-        LimitLine ll1 = new LimitLine(6f, "Maximum Limit");
+        LimitLine ll1 = new LimitLine(9f, "Maximum Limit");
         ll1.setLineWidth(4f);
         ll1.enableDashedLine(10f, 10f, 0f);
         ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
@@ -157,7 +180,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
         leftAxis.removeAllLimitLines();
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(11f);
+        leftAxis.setAxisMaximum(20f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
@@ -182,9 +205,9 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             set1.setValues(values);
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
-            System.out.println("if (mChart.getData())");
+            //System.out.println("if (mChart.getData())");
         } else {
-            System.out.println("elsef (mChart.getData())");
+            //System.out.println("elsef (mChart.getData())");
             set1 = new LineDataSet(values, "Sample Data");
             set1.setDrawIcons(false);
             set1.enableDashedLine(10f, 5f, 0f);

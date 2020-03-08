@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sch.Adaptars.SubsAdaptar;
+import com.example.sch.Databases.DBHandler;
 import com.example.sch.Interfaces.OnItemClickListener;
 import com.example.sch.R;
 import com.example.sch.Substance;
@@ -64,7 +65,8 @@ public class PlaceholderFragment extends Fragment {
         RecyclerView rvsubs = (RecyclerView) rootView.findViewById(R.id.items_view);
 
         // Initialize contacts
-        subs = Substance.createContactsList(4);
+        DBHandler helper = new DBHandler(getContext());
+        subs = helper.getAllStatus(getArguments().getString(ARG_SECTION_DATE));
         // Create adapter passing in the sample user data
         SubsAdaptar adapter = new SubsAdaptar(rootView.getContext(), subs);
         adapter.setOnItemClickListener(new OnItemClickListener() {

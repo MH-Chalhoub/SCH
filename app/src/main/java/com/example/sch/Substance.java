@@ -94,7 +94,7 @@ public class Substance {
                 "Potassium is a chemical element with the symbol K (from Neo-Latin kalium) and atomic number 19. Potassium is a silvery-white metal that is soft enough to be cut with a knife with little force.",
                 "Calcium is a chemical element with the symbol Ca and atomic number 20. As an alkaline earth metal, calcium is a reactive metal that forms a dark oxide-nitride layer when exposed to air."};
         int[] subsImage = {R.drawable.creatinineimage, R.drawable.bunimage, R.drawable.potassiumimage, R.drawable.calciumimage};
-        int[] bLogos = {R.drawable.creatinine, R.drawable.bnu, R.drawable.potassium, R.drawable.calcium};
+        int[] bLogos = {R.drawable.creatinine, R.drawable.albumine, R.drawable.potassium, R.drawable.calcium};
         for (int i = 0; i < numContacts; i++) {
             double rand = Math.random()*100;
             ArrayList<Double> values = new ArrayList<>();

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sch.Adaptars.SubsAdaptar;
+import com.example.sch.Databases.DBHandler;
 import com.example.sch.Interfaces.OnItemClickListener;
 import com.example.sch.MainActivity;
 import com.example.sch.R;
@@ -70,9 +71,14 @@ public class PlaceholderTodayFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        stoptimertask();
+        //stoptimertask();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        stoptimertask();
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -92,8 +98,14 @@ public class PlaceholderTodayFragment extends Fragment {
 
         rvsubs = (RecyclerView) rootView.findViewById(R.id.items_view);
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // Initialize contacts
-        subs = Substance.createContactsList(2);
+        DBHandler helper = new DBHandler(getContext());
+        subs = helper.getAllStatus(getArguments().getString(ARG_SECTION_DATE));
         // Create adapter passing in the sample user data
         adapter = new SubsAdaptar(rootView.getContext(), subs);
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -134,7 +146,7 @@ public class PlaceholderTodayFragment extends Fragment {
         initializeTimerTask();
 
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timer.schedule(timerTask, 0,250);
+        timer.schedule(timerTask, 2000,2000);
     }
 
     public void stoptimertask() {
@@ -156,8 +168,20 @@ public class PlaceholderTodayFragment extends Fragment {
                         //get the current timeStamp
                         ALbumineValue = GenerateALbumineValue();
                         //Toast.makeText( getContext() , "albumine value :"+String.valueOf(ALbumineValue) ,Toast.LENGTH_SHORT).show();
-                        subs.get(0).setValue(ALbumineValue);
-                        subs.get(0).setLatestValues(ALbumineValue);
+
+                        DBHandler helper = new DBHandler(getContext());
+                        ArrayList<Substance> newSubs;
+                        newSubs = helper.getAllStatus(getArguments().getString(ARG_SECTION_DATE));
+                        int lastItem;
+                        lastItem = newSubs.size() != 0 ? newSubs.size()-1 : 0;
+                        if(lastItem != 0){
+                            subs.get(0).setValue(newSubs.get(0).getValue());
+                            subs.get(0).setLatestValues(newSubs.get(0).getValue());
+                            subs.get(1).setValue(newSubs.get(1).getValue());
+                            subs.get(1).setLatestValues(newSubs.get(1).getValue());
+                            subs.get(2).setValue(newSubs.get(2).getValue());
+                            subs.get(2).setLatestValues(newSubs.get(2).getValue());
+                        }
                         adapter.notifyDataSetChanged();
                     }
                 });
