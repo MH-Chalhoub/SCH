@@ -1,91 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top|right"
-    android:background="@drawable/gradient"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonLayout"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/register"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="200dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/holo_green_light"
-            android:text="Register" />
-
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/holo_green_light"
-            android:text="Reset"
-            android:enabled="false"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/PatientLayout"
-        android:layout_below="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/dateoftheday"
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="110dp"
+            app:srcCompat="@drawable/mainlogo" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/gray" />
+
+        <TextClock
+            android:id="@+id/textClock1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/doppio_one"
+            android:format12Hour="EEEE, dd/MMMM/yyyy"
             android:gravity="center"
-            android:layout_marginTop="50dp"
-            android:text="Monday 12/2/2018"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:text="Mon, 09/Mar/2020"
+            android:textAlignment="center"
+            android:textColor="@color/colorDarkblue"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextClock
+            android:id="@+id/textClock2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/doppio_one"
+            android:format12Hour="hh:mm:ss a"
+            android:text="09:00 AM"
+            android:textAlignment="center"
+            android:textColor="@color/colorDarkblue"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/gray" />
 
         <TextView
             android:id="@+id/user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/doppio_one"
             android:gravity="center"
-            android:layout_marginBottom="50dp"
-            android:text="Patient name :"
+            android:text="Patient name"
             android:textColor="@color/black"
             android:textSize="20dp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/gray" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/PatientLayout"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/dosage"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:src="@drawable/ic_menu_report_image" />
+        <LinearLayout
+            android:id="@+id/chartTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/repport"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:src="@drawable/ic_menu_report_image" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+                <ImageButton
+                    android:id="@+id/dosage"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:background="@drawable/chartbtn"
+                    android:src="@drawable/ic_show_chart_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dosage"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/doppio_one"
+                    android:text="Daily Test"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/lightgreen"
+                    android:textSize="16dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp">
+
+                <ImageButton
+                    android:id="@+id/repport"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:background="@drawable/tablebtn"
+                    android:src="@drawable/ic_assignment_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/repport"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/doppio_one"
+                    android:text="Tables"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/yellow"
+                    android:textSize="16dp" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chartTableLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/register"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:background="@drawable/registerbtn"
+                    android:src="@drawable/ic_add_circle_outline_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/register"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/doppio_one"
+                    android:text="Register"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/yellowGreen"
+                    android:textSize="16dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp">
+
+                <ImageButton
+                    android:id="@+id/reset"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:background="@drawable/resetbtn"
+                    android:src="@drawable/ic_delete_forever_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/reset"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/doppio_one"
+                    android:text="Reset"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/red"
+                    android:textSize="16dp" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -93,9 +209,9 @@
         android:id="@+id/fabhome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 
