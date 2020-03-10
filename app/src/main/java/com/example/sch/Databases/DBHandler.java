@@ -10,6 +10,7 @@ import com.example.sch.Entities.Patient;
 import com.example.sch.R;
 import com.example.sch.Substance;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +34,9 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_AGE = "age";
     private static final String KEY_NAME = "name";
-    private static final String KEY_PH_NO = "phone_number";
-    private static final String KEY_BL_GR = "blood_groupe";
+    private static final String KEY_BL_GR = "blood_grp";
     private static final String KEY_GENDER = "gender";
+    private static final String KEY_DELETED = "deleted";
 
     public DBHandler(Context c) {
 
@@ -67,22 +68,22 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public long addPatient(Patient c) {
+    public long addPatient(Patient p) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_AGE, c.getAge());
-        values.put(KEY_NAME, c.getName());
-        values.put(KEY_PH_NO, c.getPhone_number());
-        values.put(KEY_BL_GR, c.getBlood_groupe());
-        values.put(KEY_GENDER, c.getGender());
+        values.put(KEY_NAME, p.getName());
+        values.put(KEY_AGE, p.getAge());
+        values.put(KEY_BL_GR, p.getBlood_groupe());
+        values.put(KEY_GENDER, p.getGender());
+        values.put(KEY_DELETED, p.getDeleted());
 
         // Inserting Row
-        long i = db.insert(TABLE_PATIENTS, null, values);
-        System.out.println("inserted contact with id " + i);
+        long id = db.insert(TABLE_PATIENTS, null, values);
+        System.out.println("Inserted Patient with id " + id);
         db.close(); // Closing database connection
-        return i;
+        return id;
     }
 
 
@@ -90,7 +91,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public Patient getPatient(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_PATIENTS, new String[]{KEY_ID, KEY_AGE, KEY_NAME, KEY_PH_NO, KEY_BL_GR, KEY_GENDER},
+        Cursor cursor = db.query(TABLE_PATIENTS, new String[]{KEY_ID, KEY_NAME, KEY_AGE, KEY_BL_GR, KEY_GENDER, KEY_DELETED},
                 KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
 
         if (cursor == null)
@@ -98,12 +99,28 @@ public class DBHandler extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
 
-        Patient patient = new Patient(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)),
-                cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+        Patient patient = new Patient(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+                Integer.parseInt(cursor.getString(2)), cursor.getString(3), cursor.getString(4), Integer.parseInt(cursor.getString(5)));
 
         db.close();
 
         return patient;
+    }
+
+    public int getCurrentPatientId() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("select * from PATIENT where deleted=0 ", null);
+        int patientId;
+
+        if(cursor.moveToFirst()){
+            patientId = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")));
+        }
+        else
+            return -1;
+        db.close();
+
+        return patientId;
     }
 
     // Getting single contact
@@ -119,8 +136,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Patient p = new Patient(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)),
-                        cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+                Patient p = new Patient(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)), cursor.getString(3), cursor.getString(4), Integer.parseInt(cursor.getString(5)));
                 patients.add(p);
             } while (cursor.moveToNext());
         }
@@ -130,7 +147,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return patients;
     }
 
-    public void delete(int id) {
+    public void deletePatient(int id) {
         SQLiteDatabase db = getWritableDatabase();
 
         db.delete(TABLE_PATIENTS, KEY_ID + "=?", new String[]{"" + id});
@@ -138,13 +155,13 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Getting single contact
+    // Getting all Status
     public ArrayList<Substance> getAllStatus(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_STATUS + " WHERE date LIKE '" + date + "%'";
         Cursor cursor = db.rawQuery(query, null);
 
-        if (cursor == null){
+        if (cursor == null) {
             System.out.println("ArrayList null null null");
             return null;
         }
@@ -173,16 +190,15 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         int lastItem;
-        lastItem = albuminevalues.size() != 0 ? albuminevalues.size()-1 : 0;
+        lastItem = albuminevalues.size() != 0 ? albuminevalues.size() - 1 : 0;
         Substance albumine;
         Substance creatinine;
         Substance potassium;
-        if(lastItem !=0){
+        if (lastItem != 0) {
             albumine = new Substance(subs[0], subs[0], albuminevalues.get(lastItem), bLogos[0], subsinfo[0], subsImage[0], albuminevalues);
             creatinine = new Substance(subs[1], subs[1], creatininevalues.get(lastItem), bLogos[1], subsinfo[1], subsImage[1], creatininevalues);
             potassium = new Substance(subs[2], subs[2], potassiumvalues.get(lastItem), bLogos[2], subsinfo[2], subsImage[2], potassiumvalues);
-        }
-        else {
+        } else {
             //If there is no substance at the specific date
             albumine = new Substance(subs[0], subs[0], -1, bLogos[0], subsinfo[0], subsImage[0], new ArrayList<Double>());
             creatinine = new Substance(subs[1], subs[1], -1, bLogos[1], subsinfo[1], subsImage[1], new ArrayList<Double>());
@@ -195,5 +211,141 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
 
         return substances;
+    }
+
+    public long changeButtonStatus(String rgister, String reset) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("registerstatus", rgister);
+        values.put("resetstatus", reset);
+
+        if(isButtonInitialized()){
+            long id = db.update(TABLE_BUTTONS, values, "id=1", null);
+            System.out.println("Updated BUTTONS with id " + id);
+            db.close(); // Closing database connection
+            return id;
+        }
+        else {
+            long id = db.insert(TABLE_BUTTONS, null, values);
+            System.out.println("Inserted BUTTONS with id " + id);
+            db.close(); // Closing database connection
+            return id;
+        }
+    }
+
+    public boolean isButtonInitialized() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String DB_query = "SELECT * FROM " + TABLE_BUTTONS + " WHERE id=1;";
+        Cursor DB_cursor = db.rawQuery(DB_query, null);
+
+        if (DB_cursor.moveToFirst()) {
+            DB_cursor.close();
+            return true;
+        } else {
+            DB_cursor.close();
+            return false;
+        }
+    }
+    public boolean isRegisterEnabled(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String DB_query = "SELECT * FROM " + TABLE_BUTTONS + " WHERE id=1;";
+        Cursor cursor = db.rawQuery(DB_query, null);
+        String register_status = "Enable";
+        if (cursor.moveToFirst()) {
+            do {
+                register_status = String.valueOf(cursor.getString(cursor.getColumnIndex("registerstatus")));
+            } while (cursor.moveToNext());
+        }
+        if (register_status.equals("Enable"))
+            return true;
+        else
+            return false;
+    }
+    public boolean isResetEnabled(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String DB_query = "SELECT * FROM " + TABLE_BUTTONS + " WHERE id=1;";
+        Cursor cursor = db.rawQuery(DB_query, null);
+        String reset_status = "Enable";
+        if (cursor.moveToFirst()) {
+            do {
+                reset_status = String.valueOf(cursor.getString(cursor.getColumnIndex("resetstatus")));
+            } while (cursor.moveToNext());
+        }
+        if (reset_status.equals("Enable"))
+            return true;
+        else
+            return false;
+    }
+    public void disablePatientData(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("deleted", 1);
+
+        db.update("PATIENT", values, "deleted=0", null);
+
+    }
+    public long initialiseSubstance(String subName, int min, int max){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("subst", subName);
+        values.put("dosemin", min);
+        values.put("dosemax", max);
+
+        if(!isSubstanceInitialized(subName)){
+            long id = db.insert(TABLE_SUBSTANCE, null, values);
+            System.out.println("Inserted SUBSTANCE : " + subName + " with id " + id);
+            db.close(); // Closing database connection
+            return id;
+        }
+        return -1;
+    }
+    public boolean isSubstanceInitialized(String sub) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String DB_query = "SELECT * FROM " + TABLE_SUBSTANCE + " WHERE subst='" + sub + "';";
+        Cursor DB_cursor = db.rawQuery(DB_query, null);
+
+        if (DB_cursor.moveToFirst()) {
+            DB_cursor.close();
+            return true;
+        } else {
+            DB_cursor.close();
+            return false;
+        }
+    }
+
+    public long initialiseGonflement(int id, int indice, String niveau){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("id", id);
+        values.put("indice", indice);
+        values.put("niveau", niveau);
+
+        if(!isGonflementInitialized(id)){
+            long i = db.insert(TABLE_GONFLEMENT, null, values);
+            System.out.println("Inserted GONFLEMENT with id " + i);
+            db.close(); // Closing database connection
+            return i;
+        }
+        return -1;
+    }
+    public boolean isGonflementInitialized(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String DB_query = "SELECT * FROM " + TABLE_GONFLEMENT + " WHERE id=" + id + ";";
+        Cursor DB_cursor = db.rawQuery(DB_query, null);
+
+        if (DB_cursor.moveToFirst()) {
+            DB_cursor.close();
+            return true;
+        } else {
+            DB_cursor.close();
+            return false;
+        }
     }
 }

@@ -126,12 +126,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "For more info about each substance long click on it", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                /*Patient p = new Patient(15, "Mohamad", "76123456", "o+", "Male");
-                long i = dbHandler.addPatient(p);
-                Patient p1 = dbHandler.getPatient((int) i);
-                Toast.makeText(MainActivity.this, p1.toString(), Toast.LENGTH_LONG).show();*/
             }
         });
 
@@ -271,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stoptimertask();
         System.out.println("onDestroy");
     }
     public void startTimer() {
@@ -287,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void stoptimertask(View v) {
+    public void stoptimertask() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
@@ -426,6 +423,7 @@ public class MainActivity extends AppCompatActivity {
         //System.out.println("MAIN : DATE" + date);
         values.put("date", date);
         long result = dbWritable.insert("STATUS", null, values);
+        System.out.println("Insert sub for patient with id : " + patientId);
         //if (result < 0)
             //Toast.makeText(context, "No Inserted Values In Status !!!!!!!", Toast.LENGTH_LONG).show();
 

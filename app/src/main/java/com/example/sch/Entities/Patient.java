@@ -3,11 +3,11 @@ package com.example.sch.Entities;
 public class Patient {
     //private variables
     private int id;
-    private int age;
     private String name;
-    private String phone_number;
+    private int age;
     private String blood_groupe;
     private String gender;
+    private int deleted;
 
     // Empty constructor
     public Patient(){
@@ -15,22 +15,22 @@ public class Patient {
     }
 
     // constructor 1 with id
-    public Patient(int id, int age, String name, String phone_number, String blood_groupe, String gender){
+    public Patient(int id, String name, int age, String blood_groupe, String gender, int deleted){
         this.id = id;
-        this.age = age;
         this.name = name;
-        this.phone_number = phone_number;
+        this.age = age;
         this.blood_groupe = blood_groupe;
         this.gender = gender;
+        this.deleted = deleted;
     }
 
     // constructor 2 without id
-    public Patient(int age, String name, String phone_number, String blood_groupe, String gender){
-        this.age = age;
+    public Patient(String name, int age, String blood_groupe, String gender, int deleted){
         this.name = name;
-        this.phone_number = phone_number;
+        this.age = age;
         this.blood_groupe = blood_groupe;
         this.gender = gender;
+        this.deleted = deleted;
     }
 
     public int getId() {
@@ -57,14 +57,6 @@ public class Patient {
         this.name = name;
     }
 
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
     public String getBlood_groupe() {
         return blood_groupe;
     }
@@ -81,15 +73,23 @@ public class Patient {
         this.gender = gender;
     }
 
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Patient{" +
                 "id=" + id +
-                ", age=" + age +
                 ", name='" + name + '\'' +
-                ", phone_number='" + phone_number + '\'' +
+                ", age=" + age +
                 ", blood_groupe='" + blood_groupe + '\'' +
                 ", gender='" + gender + '\'' +
+                ", deleted=" + deleted +
                 '}';
     }
 }

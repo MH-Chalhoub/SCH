@@ -90,19 +90,11 @@ public class PlaceholderTodayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        //final View rootView1 = inflater.inflate(R.layout.activity_main, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        //TextView day = (TextView) rootView1.findViewById(R.id.day);
         textView.setText("Today");
-        //day.setText("Today");
 
         rvsubs = (RecyclerView) rootView.findViewById(R.id.items_view);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         // Initialize contacts
         DBHandler helper = new DBHandler(getContext());
         subs = helper.getAllStatus(getArguments().getString(ARG_SECTION_DATE));
