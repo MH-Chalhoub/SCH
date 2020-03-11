@@ -75,6 +75,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             renderData(imageViewHolder.mChart, itemCur.getValues());
             imageViewHolder.mChart.setTouchEnabled(false);
             imageViewHolder.mChart.setPinchZoom(false);
+            imageViewHolder.mChart.getDescription().setText(itemCur.getSub_name() + " Levels");
             imageViewHolder.chartDescription.setText("This is " + itemCur.getSub_name().toUpperCase() + " values during this day ");
             if(itemCur.getValue() < 3 || itemCur.getValue() > 9){
                 imageViewHolder.insideCard.setBackgroundColor(mContext.getResources().getColor(R.color.transparentRed));

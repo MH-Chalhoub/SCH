@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     float min, max; //min and max for each substance % select from database
     float value, av4;    //value need in random fction , av4 is average of deviation of gonflement
     static float dialysat;   //dose of dialysat required for dialyse
-    static double time_required;    //time of dialyse required
+    static int time_required;    //time of dialyse required
     int test = 0;     //test=1 if critical states
     float dbdialysat;
     int patientId;
@@ -281,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
         timer.schedule(timerTask, 0, 1000);
+        time_to_check.schedule(timertocheckTask, 0, 30000);
 
     }
 
@@ -319,9 +320,11 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 //use a handler to run a toast that shows the current timestamp
                 handler.post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     public void run() {
                         //get the current timeStamp
                         value++;
+                        notificationDialog();
                     }
                 });
 
@@ -434,7 +437,23 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     float checkstatus(double albumine_avg, double creatinine_avg, double potassium_avg, float gonflement_avg) {
         time_required = 0;
-        dialysat = 0;
+        dialysat = 15;
+        //Max dialysat dose : in case if the patient take dose above the Max dose it will affect his
+        // kidney and in some cases he may die.
+        float max_dialysat_dose=22;
+
+        //Min dialysat dose : in case if the patient take dose below the Min dose it will affect the
+        // operation of cleaning his blood and in some cases he may die.
+        float min_dialysat_dose=15;
+
+        //Max dialysat dose : in case if the patient take dose above the Max dose it will affect his
+        // kidney and in some cases he may die.
+        int max_time_required=20;
+
+        //Min dialysat dose : in case if the patient take dose below the Min dose it will affect the
+        // operation of cleaning his blood and in some cases he may die.
+        int min_time_required=8;
+
         if (albumine_avg < 25) {
             dialysat += 2;
             time_required += 2;
@@ -458,8 +477,25 @@ public class MainActivity extends AppCompatActivity {
             time_required += 12;
         }
 
+        //in case if the dialysat is above the Max dialysat dose the dialysat is
+        // reassigned to max_dialysat_dose
+        if(dialysat>max_dialysat_dose)
+            dialysat = max_dialysat_dose;
+        //in case if the dialysat is below the Min dialysat dose the dialysat is
+        // reassigned to min_dialysat_dose
+        if(dialysat<min_dialysat_dose)
+            dialysat = min_dialysat_dose;
 
-        //notificationDialog();
+        //in case if the time required is above the Max time required the time_required is
+        // reassigned to max_time_required
+        if(time_required<max_time_required)
+            time_required = max_time_required;
+        //in case if the time required is below the Min time required the time_required is
+        // reassigned to min_time_required
+        if(time_required<min_time_required)
+            time_required = min_time_required;
+
+
         return dialysat;
 
     }
@@ -482,11 +518,12 @@ public class MainActivity extends AppCompatActivity {
         notificationBuilder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setSmallIcon(R.drawable.kidney_notification)
                 .setTicker("Tutorialspoint")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("You have " + String.valueOf(time_required) + " Hour of Dialyse REQUIRED. And your Dialysat Quote = " + String.valueOf(dialysat) + "g/dL"))
                 //.setPriority(Notification.PRIORITY_MAX)
-                .setContentTitle("Warning!!")
-                .setContentText("You have " + String.valueOf(time_required) + "h of dialyse ; require. GET WELL SOON!! " + String.valueOf(dialysat) + "d/l of dialysat")
+                .setContentTitle("SCH Warning")
                 .setContentInfo("Information");
         notificationManager.notify(1, notificationBuilder.build());
     }

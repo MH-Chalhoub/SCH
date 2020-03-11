@@ -157,8 +157,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // Getting all Status
     public ArrayList<Substance> getAllStatus(String date) {
+        String query = "SELECT * FROM " + TABLE_STATUS + " WHERE date LIKE '" + date + "%' AND idpatient=" + getCurrentPatientId()+ ";";
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_STATUS + " WHERE date LIKE '" + date + "%'";
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor == null) {
@@ -180,6 +180,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<Double> albuminevalues = new ArrayList<>();
         ArrayList<Double> creatininevalues = new ArrayList<>();
         ArrayList<Double> potassiumvalues = new ArrayList<>();
+        ArrayList<String> dates = new ArrayList<>();
         //System.out.println("getAllStatus" + date);
         if (cursor.moveToFirst()) {
             do {
@@ -187,6 +188,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 albuminevalues.add(Double.parseDouble(cursor.getString(2)));
                 creatininevalues.add(Double.parseDouble(cursor.getString(3)));
                 potassiumvalues.add(Double.parseDouble(cursor.getString(4)));
+                dates.add(cursor.getString(7));
             } while (cursor.moveToNext());
         }
         int lastItem;
@@ -195,14 +197,14 @@ public class DBHandler extends SQLiteOpenHelper {
         Substance creatinine;
         Substance potassium;
         if (lastItem != 0) {
-            albumine = new Substance(subs[0], subs[0], albuminevalues.get(lastItem), bLogos[0], subsinfo[0], subsImage[0], albuminevalues);
-            creatinine = new Substance(subs[1], subs[1], creatininevalues.get(lastItem), bLogos[1], subsinfo[1], subsImage[1], creatininevalues);
-            potassium = new Substance(subs[2], subs[2], potassiumvalues.get(lastItem), bLogos[2], subsinfo[2], subsImage[2], potassiumvalues);
+            albumine = new Substance(subs[0], subs[0], albuminevalues.get(lastItem), bLogos[0], subsinfo[0], subsImage[0], albuminevalues, dates);
+            creatinine = new Substance(subs[1], subs[1], creatininevalues.get(lastItem), bLogos[1], subsinfo[1], subsImage[1], creatininevalues, dates);
+            potassium = new Substance(subs[2], subs[2], potassiumvalues.get(lastItem), bLogos[2], subsinfo[2], subsImage[2], potassiumvalues, dates);
         } else {
             //If there is no substance at the specific date
-            albumine = new Substance(subs[0], subs[0], -1, bLogos[0], subsinfo[0], subsImage[0], new ArrayList<Double>());
-            creatinine = new Substance(subs[1], subs[1], -1, bLogos[1], subsinfo[1], subsImage[1], new ArrayList<Double>());
-            potassium = new Substance(subs[2], subs[2], -1, bLogos[2], subsinfo[2], subsImage[2], new ArrayList<Double>());
+            albumine = new Substance(subs[0], subs[0], -1, bLogos[0], subsinfo[0], subsImage[0], new ArrayList<Double>(), new ArrayList<String>());
+            creatinine = new Substance(subs[1], subs[1], -1, bLogos[1], subsinfo[1], subsImage[1], new ArrayList<Double>(), new ArrayList<String>());
+            potassium = new Substance(subs[2], subs[2], -1, bLogos[2], subsinfo[2], subsImage[2], new ArrayList<Double>(), new ArrayList<String>());
         }
         substances.add(albumine);
         substances.add(creatinine);

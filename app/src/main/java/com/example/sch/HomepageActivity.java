@@ -63,13 +63,15 @@ public class HomepageActivity extends AppCompatActivity {
         textClock2.setTypeface(type);
 
         helper = new DBHandler(this);
+        if(!helper.isButtonInitialized())
+            helper.changeButtonStatus("Enable", "Disable");
 
         initialise();
 
         currentPatientId = helper.getCurrentPatientId();
         if(currentPatientId != -1){
             p = helper.getPatient(currentPatientId);
-            patient.setText("Hello " +p.getName());
+            patient.setText("Hello " +p.getName() + "|Blood Gp (" + p.getBlood_groupe() + ")|Age : " + p.getAge());
         }
 
         // buttons listener
@@ -125,7 +127,7 @@ public class HomepageActivity extends AppCompatActivity {
         currentPatientId = helper.getCurrentPatientId();
         if(currentPatientId != -1){
             p = helper.getPatient(currentPatientId);
-            patient.setText("Hello " +p.getName());
+            patient.setText("Hello " +p.getName() + "|Blood Gp (" + p.getBlood_groupe() + ")|Age : " + p.getAge());
         }
         setDosageReportVisibility();
     }

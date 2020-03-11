@@ -12,6 +12,9 @@ import android.widget.RadioGroup;
 import com.example.sch.Databases.DBHandler;
 import com.example.sch.Entities.Patient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class RegisterActivity extends AppCompatActivity {
 
     Button register;
@@ -24,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     Patient patient;
     String genre = "male";
+    ArrayList<String> blood_grps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class RegisterActivity extends AppCompatActivity {
         nameWrapper = findViewById(R.id.nameWrapper);
         bloodgpWrapper = findViewById(R.id.bloodgpWrapper);
         birthWrapper = findViewById(R.id.birthWrapper);
+
+        blood_grps = new ArrayList<>(Arrays.asList("a+", "b+", "ab+", "o+", "a-", "b-", "ab-", "o-"));
 
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -67,13 +73,18 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 if(ubday.isEmpty()){
-                    bloodgpWrapper.setError("Enter Name");
-                    bloodgpWrapper.requestFocus();
+                    birthWrapper.setError("Enter age");
+                    birthWrapper.requestFocus();
                     return;
                 }
                 if(ubloodgrp.isEmpty()){
-                    birthWrapper.setError("Enter Name");
-                    birthWrapper.requestFocus();
+                    bloodgpWrapper.setError("Enter blood groupe");
+                    bloodgpWrapper.requestFocus();
+                    return;
+                }
+                if(!blood_grps.contains(ubloodgrp)){
+                    bloodgpWrapper.setError("Wrong blood group choose from {a,b,ab,o}{+,-}");
+                    bloodgpWrapper.requestFocus();
                     return;
                 }
                 patient = new Patient(uname, Integer.parseInt(ubday), ubloodgrp, genre, 0);

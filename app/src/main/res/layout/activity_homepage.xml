@@ -34,6 +34,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/doppio_one"
             android:format12Hour="EEEE, dd/MMMM/yyyy"
+            android:format24Hour="EEEE, dd/MMMM/yyyy"
             android:gravity="center"
             android:text="Mon, 09/Mar/2020"
             android:textAlignment="center"
@@ -47,6 +48,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/doppio_one"
             android:format12Hour="hh:mm:ss a"
+            android:format24Hour="k:mm:ss"
             android:text="09:00 AM"
             android:textAlignment="center"
             android:textColor="@color/colorDarkblue"
@@ -67,8 +69,9 @@
             android:fontFamily="@font/doppio_one"
             android:gravity="center"
             android:text="Please Register First"
+            android:textAllCaps="true"
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="14sp" />
 
         <View
             android:layout_width="match_parent"

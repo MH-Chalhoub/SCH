@@ -1,6 +1,9 @@
 package com.example.sch;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Substance {
 
@@ -9,8 +12,9 @@ public class Substance {
     private double value;
     private int logo,image;
     private ArrayList<Double> values;
+    private ArrayList<String> dates;
 
-    public Substance(String sub_name, String add_text, double value, int logo, String sub_info, int image, ArrayList<Double> values) {
+    public Substance(String sub_name, String add_text, double value, int logo, String sub_info, int image, ArrayList<Double> values, ArrayList<String> dates) {
         this.sub_name = sub_name;
         this.add_text = add_text;
         this.value = value;
@@ -18,6 +22,7 @@ public class Substance {
         this.sub_info = sub_info;
         this.image = image;
         this.values = values;
+        this.dates = dates;
     }
 
     public Substance() {
@@ -83,9 +88,18 @@ public class Substance {
         this.values = values;
     }
 
+    public ArrayList<String> getDates() {
+        return dates;
+    }
+
+    public void setDates(ArrayList<String> dates) {
+        this.dates = dates;
+    }
+
     public void setLatestValues(double value) {
         this.values.add(value);
     }
+
     public static ArrayList<Substance> createContactsList(int numContacts) {
         ArrayList<Substance> contacts = new ArrayList<Substance>();
         String[] subs = {"creatinine", "bun", "potassium", "calcium"};
@@ -98,11 +112,16 @@ public class Substance {
         for (int i = 0; i < numContacts; i++) {
             double rand = Math.random()*100;
             ArrayList<Double> values = new ArrayList<>();
+            ArrayList<String> dates = new ArrayList<>();
+            DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
             for(int j =0; j<5; j++){
                 double randvalues = (float) (2.5+(float)Math.round(Math.random() * (7.5 - 2.5)));
+                String date = df.format(Calendar.getInstance().getTime());
+
                 values.add(randvalues);
+                dates.add(date);
             }
-            contacts.add(new Substance(subs[i%4], subs[i%4], rand, bLogos[i%4], subsinfo[i%4], subsImage[i%4], values));
+            contacts.add(new Substance(subs[i%4], subs[i%4], rand, bLogos[i%4], subsinfo[i%4], subsImage[i%4], values, dates));
         }
 
         return contacts;
