@@ -509,8 +509,8 @@ public class MainActivity extends AppCompatActivity {
             // Configure the notification channel.
             notificationChannel.setDescription("Sample Channel description");
             notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.setLightColor(Color.BLUE);
+            notificationChannel.setVibrationPattern(new long[]{0, 50});
             notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
@@ -521,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.kidney_notification)
                 .setTicker("Tutorialspoint")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("You have " + String.valueOf(time_required) + " Hour of Dialyse REQUIRED. And your Dialysat Quote = " + String.valueOf(dialysat) + "g/dL"))
+                        .bigText("You have " + String.valueOf(time_required) + " Hour of Dialyse REQUIRED. And your Dialysat Quote = " + String.valueOf(dialysat) + " g/dL"))
                 //.setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle("SCH Warning")
                 .setContentInfo("Information");

@@ -215,6 +215,34 @@ public class DBHandler extends SQLiteOpenHelper {
         return substances;
     }
 
+    public long addStatus(int idPatient, float albumine, float creatinine, float potassium, String gonflement, float dialysat,String date) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("idpatient", idPatient);
+        values.put("albumineDose",albumine);
+        values.put("creatinineDose", creatinine);
+        values.put("potassiumDose", potassium);
+        values.put("gonflement", gonflement);
+        values.put("dialysatDose", dialysat);
+        values.put("date", date);
+
+        // Inserting Row
+        long id = db.insert(TABLE_STATUS, null, values);
+        System.out.println("Inserted STATUS with id " + id);
+        db.close(); // Closing database connection
+        return id;
+    }
+
+    public void deleteAllStatus() {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.delete(TABLE_STATUS, null, null);
+
+        db.close();
+    }
+
     public long changeButtonStatus(String rgister, String reset) {
 
         SQLiteDatabase db = this.getWritableDatabase();

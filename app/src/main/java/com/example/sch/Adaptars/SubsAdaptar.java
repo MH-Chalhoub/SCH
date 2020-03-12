@@ -72,11 +72,12 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             imageViewHolder.progress.setProgress((int)itemCur.getValue());
             imageViewHolder.itemImage.setImageResource(itemCur.getLogo());
             //imageViewHolder.chartWrapperitem.setVisibility(View.GONE);
-            renderData(imageViewHolder.mChart, itemCur.getValues());
+            renderData(imageViewHolder.mChart, itemCur.getValues(), itemCur.getSub_name().toUpperCase());
             imageViewHolder.mChart.setTouchEnabled(false);
             imageViewHolder.mChart.setPinchZoom(false);
             imageViewHolder.mChart.getDescription().setText(itemCur.getSub_name() + " Levels");
             imageViewHolder.chartDescription.setText("This is " + itemCur.getSub_name().toUpperCase() + " values during this day ");
+            imageViewHolder.mChart.getDescription().setText(itemCur.getSub_name().toUpperCase() + " Levels");
             if(itemCur.getValue() < 3 || itemCur.getValue() > 9){
                 imageViewHolder.insideCard.setBackgroundColor(mContext.getResources().getColor(R.color.transparentRed));
             }
@@ -157,7 +158,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
 
 
 
-    public void renderData(LineChart mChart, ArrayList<Double> sub_values) {
+    public void renderData(LineChart mChart, ArrayList<Double> sub_values, String sub_name) {
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
@@ -188,10 +189,10 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
         leftAxis.setDrawLimitLinesBehindData(false);
 
         mChart.getAxisRight().setEnabled(false);
-        setData(mChart, sub_values);
+        setData(mChart, sub_values, sub_name);
     }
 
-    private void setData(LineChart mChart, ArrayList<Double> sub_values) {
+    private void setData(LineChart mChart, ArrayList<Double> sub_values, String sub_name) {
 
         ArrayList<Entry> values = new ArrayList<>();
         Random rand = new Random();
@@ -209,7 +210,7 @@ public class SubsAdaptar extends RecyclerView.Adapter<SubsAdaptar.ImageViewHolde
             //System.out.println("if (mChart.getData())");
         } else {
             //System.out.println("elsef (mChart.getData())");
-            set1 = new LineDataSet(values, "Sample Data");
+            set1 = new LineDataSet(values, sub_name);
             set1.setDrawIcons(false);
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);

@@ -100,8 +100,8 @@ public class HomepageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(v.getContext())
-                        .setTitle("Delete patient")
-                        .setMessage("Are you sure you want to delete this patient?!")
+                        .setTitle("DELETE PATIENT")
+                        .setMessage("Are you sure you want to delete this patient?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -116,6 +116,25 @@ public class HomepageActivity extends AppCompatActivity {
                         .setNegativeButton(android.R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
+            }
+        });
+        reset.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("DELETE PATIENT STATUS")
+                        .setMessage("Are you sure you want to delete this patient STATUS?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                helper.deleteAllStatus();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                return false;
             }
         });
     }

@@ -1,218 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="top|right"
-    android:paddingRight="30dp"
-    android:paddingLeft="30dp"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/PatientLayout"
+    android:layout_height="match_parent">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="top|right"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            app:srcCompat="@drawable/mainlogo" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/gray" />
-
-        <TextClock
-            android:id="@+id/textClock1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/doppio_one"
-            android:format12Hour="EEEE, dd/MMMM/yyyy"
-            android:format24Hour="EEEE, dd/MMMM/yyyy"
-            android:gravity="center"
-            android:text="Mon, 09/Mar/2020"
-            android:textAlignment="center"
-            android:textColor="@color/colorDarkblue"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextClock
-            android:id="@+id/textClock2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/doppio_one"
-            android:format12Hour="hh:mm:ss a"
-            android:format24Hour="k:mm:ss"
-            android:text="09:00 AM"
-            android:textAlignment="center"
-            android:textColor="@color/colorDarkblue"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/gray" />
-
-        <TextView
-            android:id="@+id/user"
+        <LinearLayout
+            android:id="@+id/PatientLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/doppio_one"
-            android:gravity="center"
-            android:text="Please Register First"
-            android:textAllCaps="true"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/gray" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                app:srcCompat="@drawable/mainlogo" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/PatientLayout"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/chartTableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dosageLayout">
-
-                <ImageButton
-                    android:id="@+id/dosage"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:background="@drawable/chartbtn"
-                    android:src="@drawable/ic_show_chart_white_24dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/dosage"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/doppio_one"
-                    android:text="Daily Test"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/lightgreen"
-                    android:textSize="16dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
                 android:layout_marginLeft="10dp"
-                android:id="@+id/repportLayout">
+                android:layout_marginRight="10dp"
+                android:background="@color/gray" />
 
-                <ImageButton
-                    android:id="@+id/repport"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:background="@drawable/tablebtn"
-                    android:src="@drawable/ic_assignment_white" />
+            <TextClock
+                android:id="@+id/textClock1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/doppio_one"
+                android:format12Hour="EEEE, dd/MMMM/yyyy"
+                android:format24Hour="EEEE, dd/MMMM/yyyy"
+                android:gravity="center"
+                android:text="Mon, 09/Mar/2020"
+                android:textAlignment="center"
+                android:textColor="@color/colorDarkblue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/repport"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/doppio_one"
-                    android:text="Tables"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/yellow"
-                    android:textSize="16dp" />
-            </RelativeLayout>
+            <TextClock
+                android:id="@+id/textClock2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/doppio_one"
+                android:format12Hour="hh:mm:ss a"
+                android:format24Hour="k:mm:ss"
+                android:text="09:00 AM"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/colorDarkblue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/gray" />
+
+            <TextView
+                android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/doppio_one"
+                android:gravity="center"
+                android:text="Please Register First"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/gray" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/chartTableLayout1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/PatientLayout"
             android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/registerLayout">
+            <LinearLayout
+                android:id="@+id/chartTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/register"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:background="@drawable/registerbtn"
-                    android:src="@drawable/ic_add_circle_outline_white" />
-
-                <TextView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/register"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/doppio_one"
-                    android:text="Register"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/yellowGreen"
-                    android:textSize="16dp" />
-            </RelativeLayout>
+                    android:id="@+id/dosageLayout">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/resetLayout">
+                    <ImageButton
+                        android:id="@+id/dosage"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:background="@drawable/chartbtn"
+                        android:src="@drawable/ic_show_chart_white_24dp" />
 
-                <ImageButton
-                    android:id="@+id/reset"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:background="@drawable/resetbtn"
-                    android:src="@drawable/ic_delete_forever_white" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dosage"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/doppio_one"
+                        android:text="Daily Test"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/lightgreen"
+                        android:textSize="16dp" />
+                </RelativeLayout>
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/reset"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/doppio_one"
-                    android:text="Reset"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/red"
-                    android:textSize="16dp" />
-            </RelativeLayout>
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/repportLayout">
 
+                    <ImageButton
+                        android:id="@+id/repport"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:background="@drawable/tablebtn"
+                        android:src="@drawable/ic_assignment_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/repport"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/doppio_one"
+                        android:text="Tables"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/yellow"
+                        android:textSize="16dp" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/chartTableLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/registerLayout">
+
+                    <ImageButton
+                        android:id="@+id/register"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:background="@drawable/registerbtn"
+                        android:src="@drawable/ic_add_circle_outline_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/register"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/doppio_one"
+                        android:text="Register"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/yellowGreen"
+                        android:textSize="16dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/resetLayout">
+
+                    <ImageButton
+                        android:id="@+id/reset"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:background="@drawable/resetbtn"
+                        android:src="@drawable/ic_delete_forever_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/reset"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/doppio_one"
+                        android:text="Reset"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/red"
+                        android:textSize="16dp" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
 
+    </RelativeLayout>
 
-</RelativeLayout>
+</ScrollView>
